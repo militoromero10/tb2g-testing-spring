@@ -4,20 +4,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.samples.petclinic.sfg.HearingInterpreter;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringJUnitConfig(classes = HearingInterpreterComponentScanTest.InnerConfig.class)
+@ActiveProfiles("component-scan")
+@SpringJUnitConfig(classes = HearingInterpreterComponentScanTest.TestConfig.class)
 class HearingInterpreterComponentScanTest {
-    /**
-     * deberia funcionar, al parecer no logra reconocer el bean primario, pues encuentra dos definiciones
-     * para usar y no sabe que hacer
-     */
+
+    @Profile("component-scan")
     @Configuration
     @ComponentScan("org.springframework.samples.petclinic.sfg")
-    static class InnerConfig {
+    static class TestConfig {
 
     }
 
@@ -25,8 +26,9 @@ class HearingInterpreterComponentScanTest {
     HearingInterpreter hearingInterpreter;
 
     @Test
-    void whatIHeard() {
-        String value = hearingInterpreter.whatIHeard();
-        assert value.equals("Laurel");
+    void whatIheard() {
+        String word = hearingInterpreter.whatIheard();
+
+        assertEquals("Laurel", word);
     }
 }

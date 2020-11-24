@@ -35,19 +35,18 @@ class ClinicServiceImplTest {
     VisitRepository visitRepository;
 
     @InjectMocks
-    ClinicServiceImpl clinicService;
+    ClinicServiceImpl service;
 
     @Test
     void findPetTypes() {
-        List<PetType> petTypes = new ArrayList<>();
-        petTypes.add(new PetType());
+        //given
+        List<PetType> petTypeList = new ArrayList<>();
+        given(petRepository.findPetTypes()).willReturn(petTypeList);
+        //when
+        Collection<PetType> returnedPetTypes = service.findPetTypes();
 
-        given(petRepository.findPetTypes()).willReturn(petTypes);
-
-        Collection<PetType> result = clinicService.findPetTypes();
-
+        //then
         then(petRepository).should().findPetTypes();
-
-        assertThat(result).isNotNull();
+        assertThat(returnedPetTypes).isNotNull();
     }
 }

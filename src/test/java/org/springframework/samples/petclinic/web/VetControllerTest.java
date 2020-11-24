@@ -9,15 +9,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Vets;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.ui.Model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -27,7 +24,7 @@ import static org.mockito.BDDMockito.then;
 class VetControllerTest {
 
     @Mock
-    ClinicService service;
+    ClinicService clinicService;
 
     @Mock
     Map<String, Object> model;
@@ -35,29 +32,33 @@ class VetControllerTest {
     @InjectMocks
     VetController controller;
 
-    List<Vet> vets = new ArrayList<>();
+    List<Vet> vetsList = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
-        vets.add(new Vet());
-        given(service.findVets()).willReturn(vets);
+        vetsList.add(new Vet());
+
+        given(clinicService.findVets()).willReturn(vetsList);
     }
 
     @Test
     void showVetList() {
-        String view = "vets/vetList";
-        String value = controller.showVetList(model);
+        //when
+        String view = controller.showVetList(model);
 
-        then(service).should().findVets();
+        //then
+        then(clinicService).should().findVets();
         then(model).should().put(anyString(), any());
-        assertThat(view).isGreaterThanOrEqualTo(value);
+        assertThat("vets/VetList").isEqualToIgnoringCase(view);
     }
 
     @Test
     void showResourcesVetList() {
-        Vets list = controller.showResourcesVetList();
+        //when
+        Vets vets = controller.showResourcesVetList();
 
-        then(service).should().findVets();
-        assertThat(list.getVetList()).hasSize(1);
+        //then
+        then(clinicService).should().findVets();
+        assertThat(vets.getVetList()).hasSize(1);
     }
 }
